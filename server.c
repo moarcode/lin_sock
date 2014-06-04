@@ -50,12 +50,14 @@ printf("Bytes sent: %d\n",send_check);
 /*Revice data */
 char* buffer=malloc(buffsize);
 int recv_check = recv(new_socket,buffer,buffsize,0);
-char*  change_port = "p";
+char*  change_port = "portup";
 int demand(char* command){
-	printf("Command: %s\n",command);
-	printf("Recived: %s\n",change_port);
-	printf("strcmp: %d\n",strcmp(command,change_port));
-	if(strcmp(command,change_port)==0){
+	printf("Recived: %s\n",command);
+	printf("Command: %s\n",change_port);
+	printf("strcmp: %d\n",strncmp(command,change_port,strlen(change_port)));
+/* Uzycie strncmp() zamiast strcmp() pozwala okreslic ile bajtow ma byc porownanych */
+/* dzieki temu porownanie command i change_port daje oczekiwane rezultaty */
+	if(strncmp(command,change_port,strlen(change_port))==0){
 		printf("Port will be changed!\n");
 	}else {printf("Port will stay as is!\n");}
 }
