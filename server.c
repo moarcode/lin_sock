@@ -6,15 +6,6 @@
 #include <string.h>
 int main(int argc, char* argv[]){
 int buffsize=1024;
-char *login = "test";
-char *haslo = "alamakota";
-int login_ok;
-int pass_ok;
-int ibuff;
-int ilogin;
-int ihaslo;
-login_ok = 0;
-pass_ok = 0;
 /* Port na jakim serwer nasluchuje */
 int portno;
 int adr_len;
@@ -53,61 +44,24 @@ new_socket = accept(socket_desc, (struct sockaddr *)&adres, &adr_len);
 if (new_socket < 0){ perror("Accept connection");}
 printf("New socket descriptor: %d\n", new_socket);
 /* Sending data */
-char *msg = "Connection has been established.\r\nNow you can rule the World\r\nEnter your login: ";
+char *msg = "Connection has been established.\r\nNow you can rule the World\r\n";
 int send_check = send(new_socket,msg,strlen(msg),0);
 printf("Bytes sent: %d\n",send_check);
 /*Revice data */
 char* buffer=malloc(buffsize);
 int recv_check = recv(new_socket,buffer,buffsize,0);
-printf("%s",buffer);
-printf("%s",login);
-	char* lconfirm = "Login OK!\n";
-	char* ldeny = "Login incorrect!\n";
-	char* pconfirm = "Passowrd OK!\n";
-	char* pdeny = "Password incorrect!\n";
-int login_check(char* ltocheck){
-	//int iltocheck;
-	//iltocheck=atoi(ltocheck);
-	//int ilogin;
-	//ilogin = atoi(login);
-	//printf("%d\n",iltocheck);
-	//printf("%d\n",ilogin);
-	printf("Login: %s",login);
-	printf("Logincheck: %s",ltocheck);
-	printf("strcmp: %d\n",strcmp(login,ltocheck));
-		if (strcmp(login,ltocheck)){
-			login_ok=1;
-			send(new_socket,lconfirm,strlen(lconfirm),0);
-		} else { 
-			send(new_socket,ldeny,strlen(ldeny),0);
-			login_ok=0;
-		}
-	return login_ok;
+char*  change_port = "p";
+int demand(char* command){
+	printf("Command: %s\n",command);
+	printf("Recived: %s\n",change_port);
+	printf("strcmp: %d\n",strcmp(command,change_port));
+	if(strcmp(command,change_port)==0){
+		printf("Port will be changed!\n");
+	}else {printf("Port will stay as is!\n");}
 }
-/* Piki login_check() nie dziala, nie ruszam pass_check()
-int pass_check(char* ptocheck){
-	int iptocheck;
-	iptocheck=atoi(ptocheck);
-	int ipass;
-	ipass = atoi(haslo);
-		if (iptocheck==ipass){
-			pass_ok=1;
-			send(new_socket,pconfirm,strlen(pconfirm),0);
-		} else { 
-			send(new_socket,pdeny,strlen(pdeny),0);
-			pass_ok=0;
-		}
-	return pass_ok;
-}*/
-const int test = login_check(buffer);
-printf("Login: %d\n",test);
-/*char* enter_pass = "Podaj haslo: ";
-send(new_socket,enter_pass,strlen(enter_pass),0);
-recv(new_socket,buffer,buffsize,0);
-const int test2 = pass_check(buffer);*/
+demand(buffer);
 sleep(1000);
 int close_check = close(socket_desc);
-printf("Pass: %d\n",test2);
 printf("Close: %d\n",close_check);
 return 0;
 }
