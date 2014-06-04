@@ -63,12 +63,19 @@ printf("%s",buffer);
 printf("%s",login);
 	char* lconfirm = "Login OK!\n";
 	char* ldeny = "Login incorrect!\n";
+	char* pconfirm = "Passowrd OK!\n";
+	char* pdeny = "Password incorrect!\n";
 int login_check(char* ltocheck){
-	int iltocheck;
-	iltocheck=atoi(ltocheck);
-	int ilogin;
-	ilogin = atoi(login);
-		if (iltocheck==ilogin){
+	//int iltocheck;
+	//iltocheck=atoi(ltocheck);
+	//int ilogin;
+	//ilogin = atoi(login);
+	//printf("%d\n",iltocheck);
+	//printf("%d\n",ilogin);
+	htons(login);
+	printf("%s",login);
+	printf("%s",ltocheck);
+		if (ltocheck==login){
 			login_ok=1;
 			send(new_socket,lconfirm,strlen(lconfirm),0);
 		} else { 
@@ -77,11 +84,30 @@ int login_check(char* ltocheck){
 		}
 	return login_ok;
 }
+
+int pass_check(char* ptocheck){
+	int iptocheck;
+	iptocheck=atoi(ptocheck);
+	int ipass;
+	ipass = atoi(haslo);
+		if (iptocheck==ipass){
+			pass_ok=1;
+			send(new_socket,pconfirm,strlen(pconfirm),0);
+		} else { 
+			send(new_socket,pdeny,strlen(pdeny),0);
+			pass_ok=0;
+		}
+	return pass_ok;
+}
 const int test = login_check(buffer);
 printf("Login: %d\n",test);
-//printf("Podaj haslo: ");
-//recv(new_socket,buffer,buffsize,0);}
+char* enter_pass = "Podaj haslo: ";
+send(new_socket,enter_pass,strlen(enter_pass),0);
+recv(new_socket,buffer,buffsize,0);
+const int test2 = pass_check(buffer);
 sleep(1000);
 int close_check = close(socket_desc);
+printf("Pass: %d\n",test2);
 printf("Close: %d\n",close_check);
+return 0;
 }
