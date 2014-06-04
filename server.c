@@ -6,7 +6,7 @@
 #include <string.h>
 int main(int argc, char* argv[]){
 int buffsize=1024;
-char *login = "test\n";
+char *login = "test";
 char *haslo = "alamakota";
 int login_ok;
 int pass_ok;
@@ -15,6 +15,10 @@ int ilogin;
 int ihaslo;
 login_ok = 0;
 pass_ok = 0;
+/* Port na jakim serwer nasluchuje */
+int portno;
+int adr_len;
+int new_socket;
 /* Tworzenie gniazda */
 /* socket() zwraca deskrypotor gniazda */
 /* To jest master socket - naslucuje na nim */
@@ -29,8 +33,6 @@ struct sockaddr_in adres;
 /* Typ gniazda socket_desc */
 adres.sin_family = AF_INET;
 adres.sin_addr.s_addr = INADDR_ANY;
-/* Port na jakim serwer nasluchuje */
-int portno;
 /*Konwersja char na int z argumentu wywolania programu */
 portno=atoi(argv[1]);
 adres.sin_port = htons(portno);
@@ -46,8 +48,6 @@ if (&bind_check > 0){printf("Socket binded properly\n");}
 int* listen_check = listen(socket_desc, 3);
 if (&listen_check > 0){printf("Listening on port: %d\n",portno);}
 /* Accept connection */
-int adr_len;
-int new_socket;
 adr_len = sizeof(struct sockaddr_in);
 new_socket = accept(socket_desc, (struct sockaddr *)&adres, &adr_len);
 if (new_socket < 0){ perror("Accept connection");}
@@ -72,10 +72,10 @@ int login_check(char* ltocheck){
 	//ilogin = atoi(login);
 	//printf("%d\n",iltocheck);
 	//printf("%d\n",ilogin);
-	htons(login);
-	printf("%s",login);
-	printf("%s",ltocheck);
-		if (ltocheck==login){
+	printf("Login: %s",login);
+	printf("Logincheck: %s",ltocheck);
+	printf("strcmp: %d\n",strcmp(login,ltocheck));
+		if (strcmp(login,ltocheck)){
 			login_ok=1;
 			send(new_socket,lconfirm,strlen(lconfirm),0);
 		} else { 
@@ -84,7 +84,7 @@ int login_check(char* ltocheck){
 		}
 	return login_ok;
 }
-
+/* Piki login_check() nie dziala, nie ruszam pass_check()
 int pass_check(char* ptocheck){
 	int iptocheck;
 	iptocheck=atoi(ptocheck);
@@ -98,13 +98,13 @@ int pass_check(char* ptocheck){
 			pass_ok=0;
 		}
 	return pass_ok;
-}
+}*/
 const int test = login_check(buffer);
 printf("Login: %d\n",test);
-char* enter_pass = "Podaj haslo: ";
+/*char* enter_pass = "Podaj haslo: ";
 send(new_socket,enter_pass,strlen(enter_pass),0);
 recv(new_socket,buffer,buffsize,0);
-const int test2 = pass_check(buffer);
+const int test2 = pass_check(buffer);*/
 sleep(1000);
 int close_check = close(socket_desc);
 printf("Pass: %d\n",test2);
