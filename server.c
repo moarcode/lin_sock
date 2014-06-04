@@ -5,10 +5,14 @@
 #include <netinet/in.h>
 #include <string.h>
 int main(int argc, char* argv[]){
-char *login = "test";
+int buffsize=1024;
+char *login = "test\n";
 char *haslo = "alamakota";
 int login_ok;
 int pass_ok;
+int ibuff;
+int ilogin;
+int ihaslo;
 login_ok = 0;
 pass_ok = 0;
 /* Tworzenie gniazda */
@@ -50,30 +54,33 @@ if (new_socket < 0){ perror("Accept connection");}
 printf("New socket descriptor: %d\n", new_socket);
 /* Sending data */
 char *msg = "Connection has been established.\r\nNow you can rule the World\r\nEnter your login: ";
-char *confirm = ".\n";
 int send_check = send(new_socket,msg,strlen(msg),0);
 printf("Bytes sent: %d\n",send_check);
 /*Revice data */
-int buffsize=1024;
-char *buffer=malloc(buffsize);
+char* buffer=malloc(buffsize);
 int recv_check = recv(new_socket,buffer,buffsize,0);
 printf("%s",buffer);
-if (buffer==&login){printf("OK!\n");}else{printf("FAIL!\n");}
-//printf("Bytes recived: %d\n",recv_check);
-//printf("Msg: %s",buffer);
-//send_check = send(new_socket,confirm,strlen(confirm),0);
-/*if (buffer==login){
-	buffer = "0";
-	login_ok = 1;
-	printf("Enter your passowrd: ");
-	recv(new_socket,buffer,buffsize,0);
-
-if (buffer==haslo){
-	printf("Password ok! Acces granted!\n");
-	pass_ok = 1;
- 
-if (pass_ok == 1) {printf("GRANTED!");}}}*/
-
+printf("%s",login);
+	char* lconfirm = "Login OK!\n";
+	char* ldeny = "Login incorrect!\n";
+int login_check(char* ltocheck){
+	int iltocheck;
+	iltocheck=atoi(ltocheck);
+	int ilogin;
+	ilogin = atoi(login);
+		if (iltocheck==ilogin){
+			login_ok=1;
+			send(new_socket,lconfirm,strlen(lconfirm),0);
+		} else { 
+			send(new_socket,ldeny,strlen(ldeny),0);
+			login_ok=0;
+		}
+	return login_ok;
+}
+const int test = login_check(buffer);
+printf("Login: %d\n",test);
+//printf("Podaj haslo: ");
+//recv(new_socket,buffer,buffsize,0);}
 sleep(1000);
 int close_check = close(socket_desc);
 printf("Close: %d\n",close_check);
