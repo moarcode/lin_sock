@@ -58,6 +58,7 @@ int send_check = send(new_socket,msg,strlen(msg),0);
 printf("Bytes sent: %d\n",send_check);
 /*Revice data */
 char* buffer=malloc(buffsize);
+char* ack = "ok";
 int recv_check = recv(new_socket,buffer,buffsize,0);
 char*  change_port = "portup";
 printf("Port: %s\n",change_port);
@@ -69,8 +70,9 @@ int demand(char* command){
 /* dzieki temu porownanie command i change_port daje oczekiwane rezultaty */
 	if(strncmp(command,change_port,strlen(change_port))==0){
 		printf("Port will be changed!\n");
+		send(new_socket,ack,strlen(ack),0);
 /* !!! Odpalenie drugiej instacji programu na porcie 8889 */
-		system("./server 8889");
+		system("./server 6667");
 	}else {printf("Port will stay as is!\n");}
 }
 demand(buffer);
