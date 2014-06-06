@@ -1,3 +1,9 @@
+/*
+ * 1. socket();
+ * 2. bind();
+ * 3. listen();
+ * 4. accept();
+ */
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <stdio.h>
@@ -8,8 +14,10 @@ int main(int argc, char* argv[]){
 int buffsize=1024;
 /* Port na jakim serwer nasluchuje */
 int portno;
-int adr_len;
 int new_socket;
+int inc_socket;
+int adr_len;
+
 /* Tworzenie gniazda */
 /* socket() zwraca deskrypotor gniazda */
 /* To jest master socket - naslucuje na nim */
@@ -39,6 +47,7 @@ if (&bind_check > 0){printf("Socket binded properly\n");}
 int* listen_check = listen(socket_desc, 3);
 if (&listen_check > 0){printf("Listening on port: %d\n",portno);}
 /* Accept connection */
+
 adr_len = sizeof(struct sockaddr_in);
 new_socket = accept(socket_desc, (struct sockaddr *)&adres, &adr_len);
 if (new_socket < 0){ perror("Accept connection");}
@@ -51,6 +60,7 @@ printf("Bytes sent: %d\n",send_check);
 char* buffer=malloc(buffsize);
 int recv_check = recv(new_socket,buffer,buffsize,0);
 char*  change_port = "portup";
+printf("Port: %s\n",change_port);
 int demand(char* command){
 	printf("Recived: %s\n",command);
 	printf("Command: %s\n",change_port);
@@ -59,6 +69,8 @@ int demand(char* command){
 /* dzieki temu porownanie command i change_port daje oczekiwane rezultaty */
 	if(strncmp(command,change_port,strlen(change_port))==0){
 		printf("Port will be changed!\n");
+/* !!! Odpalenie drugiej instacji programu na porcie 8889 */
+		system("./server 8889");
 	}else {printf("Port will stay as is!\n");}
 }
 demand(buffer);
